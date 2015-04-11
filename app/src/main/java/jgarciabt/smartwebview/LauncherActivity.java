@@ -4,14 +4,9 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 import com.squareup.otto.Subscribe;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import jgarciabt.smartwebview.broadcast.NetworkBroadcastReceiver;
@@ -20,7 +15,6 @@ import jgarciabt.smartwebview.broadcast.events.InternetUpEvent;
 import jgarciabt.smartwebview.bus.BusManager;
 import jgarciabt.smartwebview.utils.Constants;
 import jgarciabt.smartwebview.utils.CustomWebViewClient;
-import jgarciabt.smartwebview.utils.NetworkStatus;
 import jgarciabt.smartwebview.utils.SnackbarUtils;
 
 
@@ -33,6 +27,8 @@ public class LauncherActivity extends Activity {
     private BusManager busManager;
     private NetworkBroadcastReceiver networkBroadcastReceiver;
     private IntentFilter intentFilter;
+
+    private String lastUrlAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +75,7 @@ public class LauncherActivity extends Activity {
 
     private void setupWebView()
     {
+        lastUrlAvailable = Constants.BASE_URL;
         webViewFrame.loadUrl(Constants.BASE_URL);
         webViewFrame.setWebViewClient(new CustomWebViewClient(this));
         webViewFrame.getSettings().setJavaScriptEnabled(true);
@@ -99,12 +96,20 @@ public class LauncherActivity extends Activity {
     public void internetConnectionGone(InternetDownEvent event)
     {
         SnackbarUtils.showNoInternetSnackbar(this);
+        lastUrlAvailable = webViewFrame.getUrl();
     }
 
     @Subscribe
     public void internetConnectionCame(InternetUpEvent event)
     {
         SnackbarUtils.dismissSnackbar();
+
+        if(lastUrlAvailable.matches(Constants.OFFLINE_FILE))
+        {
+            webViewFrame.loadUrl(Constants.BASE_URL);
+            return;
+        }
+        webViewFrame.loadUrl(lastUrlAvailable);
     }
 
 }
