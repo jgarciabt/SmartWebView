@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -15,9 +16,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import jgarciabt.smartwebview.broadcast.NetworkBroadcastReceiver;
 import jgarciabt.smartwebview.broadcast.events.InternetDownEvent;
+import jgarciabt.smartwebview.broadcast.events.InternetUpEvent;
 import jgarciabt.smartwebview.bus.BusManager;
 import jgarciabt.smartwebview.utils.Constants;
 import jgarciabt.smartwebview.utils.CustomWebViewClient;
+import jgarciabt.smartwebview.utils.NetworkStatus;
 import jgarciabt.smartwebview.utils.SnackbarUtils;
 
 
@@ -76,36 +79,32 @@ public class LauncherActivity extends Activity {
 
     private void setupWebView()
     {
-        webViewFrame.setWebViewClient(new CustomWebViewClient(this));
-
         webViewFrame.loadUrl(Constants.BASE_URL);
-        WebSettings webSettings = webViewFrame.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        webViewFrame.setWebViewClient(new CustomWebViewClient(this));
+        webViewFrame.getSettings().setJavaScriptEnabled(true);
     }
 
-    private boolean isOnRootURL(String currentURL)
+    private boolean isOnRootURL(String currentUrl)
     {
-        return currentURL.matches(Constants.BASE_URL);
+        return (currentUrl.matches(Constants.BASE_URL) || currentUrl.matches(Constants.OFFLINE_FILE));
     }
 
     private String previousLevelUrl(String currentUrl)
     {
-        String url = currentUrl;
-
         String lastPath = Uri.parse(currentUrl).getLastPathSegment();
-        return url.substring(0, currentUrl.length() - lastPath.length() - 1);
+        return currentUrl.substring(0, currentUrl.length() - lastPath.length() - 1);
     }
 
     @Subscribe
     public void internetConnectionGone(InternetDownEvent event)
     {
-        ActionClickListener action = new ActionClickListener() {
-            @Override
-            public void onActionClicked(Snackbar snackbar) { }
-        };
+        SnackbarUtils.showNoInternetSnackbar(this);
+    }
 
-        SnackbarUtils.showNoInternetSnackbar(this, action);
-
+    @Subscribe
+    public void internetConnectionCame(InternetUpEvent event)
+    {
+        SnackbarUtils.dismissSnackbar();
     }
 
 }

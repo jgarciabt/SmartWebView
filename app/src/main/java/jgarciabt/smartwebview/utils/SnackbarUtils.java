@@ -15,13 +15,12 @@ import jgarciabt.smartwebview.R;
  */
 public class SnackbarUtils{
 
-    private static Snackbar defaultSnackbarConstructor(Context context, int color, int text, ActionClickListener actionListener,String actionLabel, Snackbar.SnackbarDuration duration)
+    private static Snackbar defaultSnackbarConstructor(Context context, int color, int text, String actionLabel, Snackbar.SnackbarDuration duration)
     {
 
         Snackbar snackbar = Snackbar.with(context)
                 .color(color)
                 .text(text)
-                .actionListener(actionListener)
                 .actionLabel(actionLabel)
                 .duration(duration);
 
@@ -29,9 +28,9 @@ public class SnackbarUtils{
        return snackbar;
     }
 
-    public static void showNoInternetSnackbar(Context context, ActionClickListener actionClickListener)
+    public static void showNoInternetSnackbar(Context context)
     {
-        SnackbarManager.show(defaultSnackbarConstructor(context, Color.RED, R.string.snackbar_offline_message, actionClickListener,"OK", Snackbar.SnackbarDuration.LENGTH_INDEFINITE));
+        SnackbarManager.show(defaultSnackbarConstructor(context, Color.RED, R.string.snackbar_offline_message, "OK", Snackbar.SnackbarDuration.LENGTH_INDEFINITE));
     }
 
     public static void dismissSnackbar()

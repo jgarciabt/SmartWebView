@@ -22,7 +22,8 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver{
     private NetworkInfo mobileStatus;
     private BusManager busManager;
 
-    public NetworkBroadcastReceiver(Context context) {
+    public NetworkBroadcastReceiver(Context context)
+    {
         this.context = context;
 
         busManager = BusManager.getInstance();
@@ -32,7 +33,8 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver{
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent)
+    {
 
         connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         wifiStatus = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
