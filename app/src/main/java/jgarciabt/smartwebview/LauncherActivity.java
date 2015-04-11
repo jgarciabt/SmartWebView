@@ -2,7 +2,6 @@ package jgarciabt.smartwebview;
 
 import android.app.Activity;
 import android.content.IntentFilter;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebSettings;
@@ -17,7 +16,7 @@ import butterknife.InjectView;
 import jgarciabt.smartwebview.broadcast.NetworkBroadcastReceiver;
 import jgarciabt.smartwebview.broadcast.events.InternetDownEvent;
 import jgarciabt.smartwebview.bus.BusManager;
-import jgarciabt.smartwebview.utils.Constans;
+import jgarciabt.smartwebview.utils.Constants;
 import jgarciabt.smartwebview.utils.CustomWebViewClient;
 import jgarciabt.smartwebview.utils.SnackbarUtils;
 
@@ -63,7 +62,6 @@ public class LauncherActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
         if(webViewFrame.canGoBack())
         {
@@ -71,23 +69,29 @@ public class LauncherActivity extends Activity {
             {
                 webViewFrame.goBack();
             }
+            else
+            {
+                finish();
+            }
         }
-
-        finish();
+        else
+        {
+            finish();
+        }
     }
 
     private void setupWebView()
     {
         webViewFrame.setWebViewClient(new CustomWebViewClient(this));
 
-        webViewFrame.loadUrl(Constans.BASE_URL);
+        webViewFrame.loadUrl(Constants.BASE_URL);
         WebSettings webSettings = webViewFrame.getSettings();
         webSettings.setJavaScriptEnabled(true);
     }
 
     private boolean isOnRootURL(String currentURL)
     {
-        return currentURL.matches(Constans.BASE_URL);
+        return currentURL.matches(Constants.BASE_URL);
     }
 
     @Subscribe
@@ -96,7 +100,7 @@ public class LauncherActivity extends Activity {
         ActionClickListener action = new ActionClickListener() {
             @Override
             public void onActionClicked(Snackbar snackbar) {
-                Log.v(Constans.LOG_TAG, "Dismissed");
+                Log.v(Constants.LOG_TAG, "Dismissed");
             }
         };
 

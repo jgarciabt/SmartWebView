@@ -21,7 +21,7 @@ public class CustomWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        if (Uri.parse(url).getHost().matches(Constans.DEMO_HOST)) {
+        if (Uri.parse(url).getHost().matches(Constants.HOST)) {
             // This is my web site, so do not override; let my WebView load the page
             return false;
         }
