@@ -2,8 +2,8 @@ package jgarciabt.smartwebview;
 
 import android.app.Activity;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -63,16 +63,10 @@ public class LauncherActivity extends Activity {
     @Override
     public void onBackPressed() {
 
-        if(webViewFrame.canGoBack())
+        if(!isOnRootURL(webViewFrame.getUrl()))
         {
-            if(!isOnRootURL(webViewFrame.getUrl()))
-            {
-                webViewFrame.goBack();
-            }
-            else
-            {
-                finish();
-            }
+            String goBackUrl = previousLevelUrl(webViewFrame.getUrl());
+            webViewFrame.loadUrl(goBackUrl);
         }
         else
         {
@@ -94,14 +88,20 @@ public class LauncherActivity extends Activity {
         return currentURL.matches(Constants.BASE_URL);
     }
 
+    private String previousLevelUrl(String currentUrl)
+    {
+        String url = currentUrl;
+
+        String lastPath = Uri.parse(currentUrl).getLastPathSegment();
+        return url.substring(0, currentUrl.length() - lastPath.length() - 1);
+    }
+
     @Subscribe
     public void internetConnectionGone(InternetDownEvent event)
     {
         ActionClickListener action = new ActionClickListener() {
             @Override
-            public void onActionClicked(Snackbar snackbar) {
-                Log.v(Constants.LOG_TAG, "Dismissed");
-            }
+            public void onActionClicked(Snackbar snackbar) { }
         };
 
         SnackbarUtils.showNoInternetSnackbar(this, action);
