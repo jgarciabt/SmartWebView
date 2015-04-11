@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SmartWebView</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="snackbar_offline_message">You have lost the internet connection</string>
+</resources>
