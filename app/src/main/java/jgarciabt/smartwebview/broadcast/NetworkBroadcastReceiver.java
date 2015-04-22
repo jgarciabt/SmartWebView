@@ -45,11 +45,7 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver{
         {
             mobileStatus = wifiStatus;
         }
-        if (wifiStatus.isConnected() || mobileStatus.isConnected()) {
-            busManager.post(new InternetUpEvent());
-        }
-        else
-        {
+        if (!wifiStatus.isConnected() && !mobileStatus.isConnected()) {
             busManager.post(new InternetDownEvent());
         }
 

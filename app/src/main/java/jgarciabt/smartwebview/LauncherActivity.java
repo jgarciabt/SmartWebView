@@ -42,7 +42,16 @@ public class LauncherActivity extends Activity {
         networkBroadcastReceiver = new NetworkBroadcastReceiver(this);
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
-        setupWebView();
+        if(savedInstanceState != null)
+        {
+            webViewFrame.restoreState(savedInstanceState);
+            webViewFrame.setWebViewClient(new CustomWebViewClient(this));
+            webViewFrame.getSettings().setJavaScriptEnabled(true);
+        }
+        else {
+            setupWebView();
+        }
+
     }
 
     @Override
@@ -57,6 +66,21 @@ public class LauncherActivity extends Activity {
         super.onResume();
 
         registerReceiver(networkBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        webViewFrame.saveState(outState);
+        outState.putString(Constants.LAST_URL_AVAILABLE, lastUrlAvailable);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        lastUrlAvailable = savedInstanceState.getString(Constants.LAST_URL_AVAILABLE);
     }
 
     @Override
@@ -97,19 +121,6 @@ public class LauncherActivity extends Activity {
     {
         SnackbarUtils.showNoInternetSnackbar(this);
         lastUrlAvailable = webViewFrame.getUrl();
-    }
-
-    @Subscribe
-    public void internetConnectionCame(InternetUpEvent event)
-    {
-        SnackbarUtils.dismissSnackbar();
-
-        if(lastUrlAvailable.matches(Constants.OFFLINE_FILE))
-        {
-            webViewFrame.loadUrl(Constants.BASE_URL);
-            return;
-        }
-        webViewFrame.loadUrl(lastUrlAvailable);
     }
 
 }
