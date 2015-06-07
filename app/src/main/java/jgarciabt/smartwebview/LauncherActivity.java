@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 
 import com.squareup.otto.Subscribe;
@@ -11,17 +12,15 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import jgarciabt.smartwebview.broadcast.NetworkBroadcastReceiver;
 import jgarciabt.smartwebview.broadcast.events.InternetDownEvent;
-import jgarciabt.smartwebview.broadcast.events.InternetUpEvent;
 import jgarciabt.smartwebview.bus.BusManager;
 import jgarciabt.smartwebview.utils.Constants;
 import jgarciabt.smartwebview.utils.CustomWebViewClient;
-import jgarciabt.smartwebview.utils.SnackbarUtils;
 
 
 /**
  * Created by JGarcia on 28/3/15.
  */
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends Activity{
 
     @InjectView(R.id.webViewFrame) public WebView webViewFrame;
     private BusManager busManager;
@@ -51,7 +50,6 @@ public class LauncherActivity extends Activity {
         else {
             setupWebView();
         }
-
     }
 
     @Override
@@ -119,8 +117,6 @@ public class LauncherActivity extends Activity {
     @Subscribe
     public void internetConnectionGone(InternetDownEvent event)
     {
-        SnackbarUtils.showNoInternetSnackbar(this);
         lastUrlAvailable = webViewFrame.getUrl();
     }
-
 }

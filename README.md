@@ -14,7 +14,6 @@ If the app looses internet connection (Wifi or mobile) or an error loading the p
 
 To notify the user the app is running in offline mode, a [Snackbar](https://github.com/nispok/snackbar) is displayed. You can perform any action when the user dissmis the Snackbar if you need it.
 
-As soon as the internet connection comes back the app reload the last URL where the user was automatically. You can disable this on the LauncherActivity.java file
 
 
 
