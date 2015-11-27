@@ -14,7 +14,7 @@ import jgarciabt.smartwebview.bus.BusManager;
 /**
  * Created by JGarcia on 28/3/15.
  */
-public class NetworkBroadcastReceiver extends BroadcastReceiver{
+public class NetworkBroadcastReceiver extends BroadcastReceiver {
 
     private Context context;
     private ConnectivityManager connMgr;
@@ -22,8 +22,7 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver{
     private NetworkInfo mobileStatus;
     private BusManager busManager;
 
-    public NetworkBroadcastReceiver(Context context)
-    {
+    public NetworkBroadcastReceiver(Context context) {
         this.context = context;
 
         busManager = BusManager.getInstance();
@@ -33,16 +32,14 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver{
     }
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
 
         connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         wifiStatus = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         mobileStatus = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         //TODO Fix that
-        if(mobileStatus == null)
-        {
+        if (mobileStatus == null) {
             mobileStatus = wifiStatus;
         }
         if (!wifiStatus.isConnected() && !mobileStatus.isConnected()) {

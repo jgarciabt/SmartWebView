@@ -8,6 +8,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.squareup.otto.Subscribe;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import jgarciabt.smartwebview.broadcast.NetworkBroadcastReceiver;
@@ -20,9 +21,10 @@ import jgarciabt.smartwebview.utils.CustomWebViewClient;
 /**
  * Created by JGarcia on 28/3/15.
  */
-public class LauncherActivity extends Activity{
+public class LauncherActivity extends Activity {
 
-    @InjectView(R.id.webViewFrame) public WebView webViewFrame;
+    @InjectView(R.id.webViewFrame)
+    public WebView webViewFrame;
     private BusManager busManager;
     private NetworkBroadcastReceiver networkBroadcastReceiver;
     private IntentFilter intentFilter;
@@ -41,13 +43,12 @@ public class LauncherActivity extends Activity{
         networkBroadcastReceiver = new NetworkBroadcastReceiver(this);
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
-        if(savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             webViewFrame.restoreState(savedInstanceState);
             webViewFrame.setWebViewClient(new CustomWebViewClient(this));
-            webViewFrame.getSettings().setJavaScriptEnabled(true);
-        }
-        else {
+            // Enable JavaScript only if you need it
+            // webViewFrame.getSettings().setJavaScriptEnabled(true);
+        } else {
             setupWebView();
         }
     }
@@ -84,39 +85,37 @@ public class LauncherActivity extends Activity{
     @Override
     public void onBackPressed() {
 
-        if(!isOnRootURL(webViewFrame.getUrl()))
-        {
+        if (!isOnRootURL(webViewFrame.getUrl())) {
             String goBackUrl = previousLevelUrl(webViewFrame.getUrl());
             webViewFrame.loadUrl(goBackUrl);
-        }
-        else
-        {
+        } else {
             finish();
         }
     }
 
-    private void setupWebView()
-    {
+    private void setupWebView() {
+
         lastUrlAvailable = Constants.BASE_URL;
         webViewFrame.loadUrl(Constants.BASE_URL);
         webViewFrame.setWebViewClient(new CustomWebViewClient(this));
-        webViewFrame.getSettings().setJavaScriptEnabled(true);
+        // Enable JavaScript only if you need it
+        // webViewFrame.getSettings().setJavaScriptEnabled(true);
     }
 
-    private boolean isOnRootURL(String currentUrl)
-    {
+    private boolean isOnRootURL(String currentUrl) {
+
         return (currentUrl.matches(Constants.BASE_URL) || currentUrl.matches(Constants.OFFLINE_FILE));
     }
 
-    private String previousLevelUrl(String currentUrl)
-    {
+    private String previousLevelUrl(String currentUrl) {
+
         String lastPath = Uri.parse(currentUrl).getLastPathSegment();
         return currentUrl.substring(0, currentUrl.length() - lastPath.length() - 1);
     }
 
     @Subscribe
-    public void internetConnectionGone(InternetDownEvent event)
-    {
+    public void internetConnectionGone(InternetDownEvent event) {
+
         lastUrlAvailable = webViewFrame.getUrl();
     }
 }
